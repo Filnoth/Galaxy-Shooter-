@@ -17,18 +17,54 @@ public class Player : MonoBehaviour
     private int _lives = 3;
     private SpawnManager _spawnManager;
 
-    [SerializeField]
     private bool _tripleShotActive = false;
     [SerializeField]
     private GameObject _tripleShotPrefab;
+    private bool _speedBoostActive = false;
+    [SerializeField]
+    private float _speedMultiplier = 2;
+    private bool _shieldBoostActive = false;
+    [SerializeField]
+    private GameObject _Shield;
+
+    [SerializeField]
+    private int _score;
+    [SerializeField]
+    private GameObject _rightThruster;
+    [SerializeField]
+    private GameObject _leftThruster;
+
+    private UIManager _uiManager;
+    [SerializeField]
+    private AudioClip _lasersfx;
+    AudioSource _audioSource;
+    [SerializeField]
+    private AudioClip _explosionSfx;
     void Start()
     {
         transform.position = new Vector3(0, 0, 0);
         _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
+        _uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();
+        _audioSource = GetComponent<AudioSource>();
+
 
         if (_spawnManager == null)
         {
             Debug.LogError("Spawn manager is NULL");
+        }
+
+        if (_uiManager == null)
+        {
+            Debug.LogError("The UIManager is NULL");
+        }
+
+        if (_audioSource == null)
+        {
+            Debug.LogError("audio source on player is NULL");
+        }
+        else if (FireLaser()) 
+        {
+            _audioSource.clip = _lasersfx;
         }
     }
 
@@ -77,13 +113,35 @@ public class Player : MonoBehaviour
             {
                 Instantiate(_laserPrefab, transform.position + offset, Quaternion.identity);
             }
+
+           
+            _audioSource.Play();
+
         }
 
     }
 
     public void Damage()
     {
+        if (_shieldBoostActive == true)
+        {
+            _shieldBoostActive = false;
+            _Shield.SetActive(false);
+            return;
+        }
+
         _lives--;
+
+        if (_lives == 2)
+        {
+            _leftThruster.SetActive(true);
+        }
+
+        else if (_lives == 1)
+        {
+            _rightThruster.SetActive(true);
+        }
+        _uiManager.UpdateLives(_lives);
         if (_lives < 1)
         {
             _spawnManager.OnPlayerDeath();
@@ -102,4 +160,37 @@ public class Player : MonoBehaviour
         yield return new WaitForSeconds(5.0f);
         _tripleShotActive = false;
     }
+
+    public void SpeedBoost()
+    {
+        _speedBoostActive = true;
+        _speed *= _speedMultiplier;
+        StartCoroutine(SpeedBoostPowerdown());
+    }
+
+    IEnumerator SpeedBoostPowerdown()
+    {
+        yield return new WaitForSeconds(5.0f);
+        _speedBoostActive = false;
+        _speed /= _speedMultiplier;
+
+    }
+
+    public void ShieldsActive()
+    {
+        _shieldBoostActive = true;
+        if (_shieldBoostActive == true)
+        {
+            _Shield.SetActive(true);
+        }
+    }
+
+    public void AddScore(int points)
+    {
+        _score += points;
+        _uiManager.UpdateScore(_score);
+    }
+
+
+
 }
