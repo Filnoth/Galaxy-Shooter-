@@ -62,7 +62,7 @@ public class Player : MonoBehaviour
         {
             Debug.LogError("audio source on player is NULL");
         }
-        else if (FireLaser()) 
+        else  
         {
             _audioSource.clip = _lasersfx;
         }

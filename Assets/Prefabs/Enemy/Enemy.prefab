@@ -48,6 +48,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ec5446a572174b409047207a4d67a17, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _enemyLaser: {fileID: 4083278772423440327, guid: bb48434a47d0b9c428c8c81eeffa1052,
+    type: 3}
 --- !u!212 &1594243431781394504
 SpriteRenderer:
   m_ObjectHideFlags: 0
