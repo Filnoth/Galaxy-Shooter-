@@ -40,6 +40,8 @@ public class Player : MonoBehaviour
     AudioSource _audioSource;
     [SerializeField]
     private AudioClip _explosionSfx;
+    private float _thrusterBoost = 2f;
+
     void Start()
     {
         transform.position = new Vector3(0, 0, 0);
@@ -97,6 +99,11 @@ public class Player : MonoBehaviour
         else if (transform.position.x < -11.3)
         {
             transform.position = new Vector3(11.3f, transform.position.y, 0);
+        }
+
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            transform.Translate(direction * (_speed + _thrusterBoost) * Time.deltaTime);
         }
     }
 
