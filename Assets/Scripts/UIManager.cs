@@ -72,7 +72,7 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    IEnumerator NoAmmo()
+   /* public IEnumerator NoAmmo()
     {
         while(true)
         {
@@ -81,16 +81,21 @@ public class UIManager : MonoBehaviour
             _ammoCountText.color = Color.white;
             yield return new WaitForSeconds(0.5f);
         }
-    }
+    }*/
 
     public void UpdateAmmo(int ammoCount)
     
     {
         _ammoCountText.text = "Ammo: " + ammoCount.ToString();
 
-        if (_player.ammo <= 0)
+        if (_player.ammo == 0)
         {
-            StartCoroutine(NoAmmo());
+            _ammoCountText.color = Color.red;
+        }
+
+        else
+        {
+            _ammoCountText.color = Color.white;
         }
     }
 

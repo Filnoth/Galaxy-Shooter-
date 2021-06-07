@@ -9,7 +9,7 @@ public class Explosion : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        if (_audiosource == null)
+        if (_audiosource != null)
         {
             Debug.LogError("Audio source on explosion is NULL");
         }

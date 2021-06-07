@@ -138,7 +138,6 @@ public class Player : MonoBehaviour
               if (ammo <= 0)
             {
                 _ammoDepleted = true;
-                Debug.Log("Out of Ammo");
             }
 
         }
@@ -221,6 +220,13 @@ public class Player : MonoBehaviour
         ammo = ammoCount;
         _uiManager.UpdateAmmo(ammo);
         
+    }
+
+    public void AmmoBoost()
+
+    {
+        ammo = _maxAmmo;
+        _ammoDepleted = false;
     }
 
 }
