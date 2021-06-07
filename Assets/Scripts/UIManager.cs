@@ -17,6 +17,11 @@ public class UIManager : MonoBehaviour
     private Text _gameOverText;
     [SerializeField]
     private Text _restartText;
+    [SerializeField]
+    private Text _ammoCountText;
+    private Player _player;
+    [SerializeField]
+    private Text _outOfAmmo;
 
     private GameManager _gameManager;
 
@@ -27,6 +32,9 @@ public class UIManager : MonoBehaviour
         _gameOverText.gameObject.SetActive(false);
         _restartText.gameObject.SetActive(false);
         _gameManager = GameObject.Find("Game_Manager").GetComponent<GameManager>();
+        _player = GameObject.Find("Player").GetComponent<Player>();
+        _ammoCountText.text = "Ammo: " + 15;
+        
 
     }
 
@@ -63,5 +71,28 @@ public class UIManager : MonoBehaviour
             yield return new WaitForSeconds(0.5f);
         }
     }
+
+    IEnumerator NoAmmo()
+    {
+        while(true)
+        {
+            _ammoCountText.color = Color.red;
+            yield return new WaitForSeconds(0.5f);
+            _ammoCountText.color = Color.white;
+            yield return new WaitForSeconds(0.5f);
+        }
+    }
+
+    public void UpdateAmmo(int ammoCount)
+    
+    {
+        _ammoCountText.text = "Ammo: " + ammoCount.ToString();
+
+        if (_player.ammo <= 0)
+        {
+            StartCoroutine(NoAmmo());
+        }
+    }
+
 
 }

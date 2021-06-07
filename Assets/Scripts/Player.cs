@@ -41,6 +41,9 @@ public class Player : MonoBehaviour
     [SerializeField]
     private AudioClip _explosionSfx;
     private float _thrusterBoost = 2f;
+    public int ammo;
+    private int _maxAmmo = 15;
+    private bool _ammoDepleted = false;
 
     void Start()
     {
@@ -48,6 +51,7 @@ public class Player : MonoBehaviour
         _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
         _uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();
         _audioSource = GetComponent<AudioSource>();
+        ammo = _maxAmmo;
 
 
         if (_spawnManager == null)
@@ -75,7 +79,10 @@ public class Player : MonoBehaviour
     {
         Movement();
 
-        FireLaser();
+        if (_ammoDepleted == false)
+        {
+            FireLaser();
+        }
     }
     void Movement()
     {
@@ -121,8 +128,18 @@ public class Player : MonoBehaviour
                 Instantiate(_laserPrefab, transform.position + offset, Quaternion.identity);
             }
 
-           
+         
+
             _audioSource.Play();
+            ammo--;
+            ReloadAmmo(ammo);
+
+
+              if (ammo <= 0)
+            {
+                _ammoDepleted = true;
+                Debug.Log("Out of Ammo");
+            }
 
         }
 
@@ -198,6 +215,12 @@ public class Player : MonoBehaviour
         _uiManager.UpdateScore(_score);
     }
 
+    public void ReloadAmmo(int ammoCount)
 
+    {
+        ammo = ammoCount;
+        _uiManager.UpdateAmmo(ammo);
+        
+    }
 
 }
