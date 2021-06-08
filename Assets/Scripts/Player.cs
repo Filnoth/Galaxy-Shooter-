@@ -44,6 +44,8 @@ public class Player : MonoBehaviour
     public int ammo;
     private int _maxAmmo = 15;
     private bool _ammoDepleted = false;
+    [SerializeField]
+    private GameObject _camera;
 
     void Start()
     {
@@ -152,9 +154,9 @@ public class Player : MonoBehaviour
             _Shield.SetActive(false);
             return;
         }
-
+        
         _lives--;
-
+        StartCoroutine(CameraShake());
         if (_lives == 2)
         {
             _leftThruster.SetActive(true);
@@ -170,6 +172,7 @@ public class Player : MonoBehaviour
             _spawnManager.OnPlayerDeath();
             Destroy(this.gameObject);
         }
+        
     }
 
     public void TripleShotActive()
@@ -227,6 +230,23 @@ public class Player : MonoBehaviour
     {
         ammo = _maxAmmo;
         _ammoDepleted = false;
+    }
+
+    IEnumerator CameraShake()
+    {
+        Vector3 currentCamPos = Camera.main.transform.position;
+
+        for (int i = 0; i < 25; i++)
+        {
+            float randomX = Random.Range(-0.5f, 0.5f);
+            float randomY = Random.Range(-0.5f, 0.5f);
+
+            Camera.main.transform.position = new Vector3(randomX, randomY, currentCamPos.z);
+
+            yield return null;
+        }
+
+        Camera.main.transform.position = currentCamPos;
     }
 
 }

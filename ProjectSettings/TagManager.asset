@@ -8,6 +8,8 @@ TagManager:
   - Enemy
   - Powerup
   - Asteroid
+  - Undefined
+  - Elaser
   layers:
   - Default
   - TransparentFX
