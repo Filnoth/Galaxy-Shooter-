@@ -46,7 +46,7 @@ public class Player : MonoBehaviour
     private bool _ammoDepleted = false;
     [SerializeField]
     private GameObject _camera;
-
+    private int _shieldCharge;
     void Start()
     {
         transform.position = new Vector3(0, 0, 0);
@@ -150,12 +150,35 @@ public class Player : MonoBehaviour
     {
         if (_shieldBoostActive == true)
         {
-            _shieldBoostActive = false;
-            _Shield.SetActive(false);
+            _shieldCharge--;
+            switch(_shieldCharge)
+            {
+                case 2: //2 charges
+                    _Shield.GetComponent<SpriteRenderer>().material.color = Color.yellow;
+                    break;
+                case 1: //1 charge left
+                    _Shield.GetComponent<SpriteRenderer>().material.color = Color.red;
+                    break;
+                case 0: //no charges left
+                    _shieldBoostActive = false;
+                    _Shield.SetActive(false);
+                    break;
+            }
             return;
+                
+           /* _shieldBoostActive = false;
+            _Shield.SetActive(false);
+            return;*/
+        }
+
+        else 
+        {
+            _shieldCharge--;
         }
         
+        if (_shieldBoostActive == false)
         _lives--;
+       
         StartCoroutine(CameraShake());
         if (_lives == 2)
         {
@@ -208,6 +231,8 @@ public class Player : MonoBehaviour
         if (_shieldBoostActive == true)
         {
             _Shield.SetActive(true);
+            _shieldCharge = 3;
+            _Shield.GetComponent<SpriteRenderer>().material.color = Color.white;
         }
     }
 

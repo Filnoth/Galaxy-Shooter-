@@ -38,7 +38,7 @@ public class Enemy : MonoBehaviour
         EnemyMovement();
         if (Time.time > _canFire)
         {
-            _fireRate = Random.Range(3f, 5f);
+            _fireRate = Random.Range(4f, 6f);
             _canFire = Time.time + _fireRate;
             GameObject enemylaser = Instantiate(_enemyLaser, transform.position, Quaternion.identity);
             Laser[] lasers = enemylaser.GetComponentsInChildren<Laser>();
