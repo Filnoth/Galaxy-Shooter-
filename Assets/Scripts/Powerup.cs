@@ -48,6 +48,9 @@ public class Powerup : MonoBehaviour
                     case 3:
                         player.AmmoBoost();
                         break;
+                    case 4:
+                        player.LifeIncrease();
+                        break;
                 }
                    
             }

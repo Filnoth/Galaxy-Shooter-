@@ -166,9 +166,6 @@ public class Player : MonoBehaviour
             }
             return;
                 
-           /* _shieldBoostActive = false;
-            _Shield.SetActive(false);
-            return;*/
         }
 
         else 
@@ -176,11 +173,11 @@ public class Player : MonoBehaviour
             _shieldCharge--;
         }
         
-        if (_shieldBoostActive == false)
         _lives--;
        
         StartCoroutine(CameraShake());
-        if (_lives == 2)
+        
+       if (_lives == 2)
         {
             _leftThruster.SetActive(true);
         }
@@ -189,12 +186,15 @@ public class Player : MonoBehaviour
         {
             _rightThruster.SetActive(true);
         }
+       
         _uiManager.UpdateLives(_lives);
+        
         if (_lives < 1)
         {
             _spawnManager.OnPlayerDeath();
             Destroy(this.gameObject);
         }
+        
         
     }
 
@@ -272,6 +272,34 @@ public class Player : MonoBehaviour
         }
 
         Camera.main.transform.position = currentCamPos;
+    }
+
+    public void LifeIncrease()
+    {
+        if(_lives <= 2 && _lives != 0)
+        {
+            _lives ++;
+            _uiManager.UpdateLives(_lives);
+            HealthRepair();
+        }
+
+    }
+    
+    public void HealthRepair()
+    {
+        switch (_lives)
+        {
+            case 3:
+                _leftThruster.SetActive(false);
+                break;
+            case 2:
+                _leftThruster.SetActive(true);
+                _rightThruster.SetActive(false);
+                break;
+            case 1:
+                _rightThruster.SetActive(true);
+                break;
+        }
     }
 
 }
