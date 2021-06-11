@@ -40,13 +40,16 @@ public class Player : MonoBehaviour
     AudioSource _audioSource;
     [SerializeField]
     private AudioClip _explosionSfx;
-    private float _thrusterBoost = 2f;
+    private float _thrusterBoost = 3f;
     public int ammo;
     private int _maxAmmo = 15;
     private bool _ammoDepleted = false;
     [SerializeField]
     private GameObject _camera;
     private int _shieldCharge;
+    private float _thrustSpeed;
+    private float _regularSpeed;
+
     void Start()
     {
         transform.position = new Vector3(0, 0, 0);
@@ -54,6 +57,8 @@ public class Player : MonoBehaviour
         _uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();
         _audioSource = GetComponent<AudioSource>();
         ammo = _maxAmmo;
+        _thrustSpeed = _speed * _thrusterBoost;
+        _regularSpeed = _speed;
 
 
         if (_spawnManager == null)
@@ -88,33 +93,45 @@ public class Player : MonoBehaviour
     }
     void Movement()
     {
-        float horizontalInput = Input.GetAxis("Horizontal");
-        float verticalInput = Input.GetAxis("Vertical");
-        Vector3 direction = new Vector3(horizontalInput, verticalInput, 0);
-        transform.Translate(direction * _speed * Time.deltaTime);
 
-        if (transform.position.y >= 0)
-        {
-            transform.position = new Vector3(transform.position.x, 0, 0);
-        }
-        else if (transform.position.y <= -4)
-        {
-            transform.position = new Vector3(transform.position.x, -4, 0);
-        }
-        if (transform.position.x > 11.3)
-        {
-            transform.position = new Vector3(-11.3f, transform.position.y, 0);
-        }
-        else if (transform.position.x < -11.3)
-        {
-            transform.position = new Vector3(11.3f, transform.position.y, 0);
-        }
 
-        if (Input.GetKey(KeyCode.LeftShift))
         {
-            transform.Translate(direction * (_speed + _thrusterBoost) * Time.deltaTime);
+            float horizontalInput = Input.GetAxis("Horizontal");
+            float verticalInput = Input.GetAxis("Vertical");
+            Vector3 direction = new Vector3(horizontalInput, verticalInput, 0);
+            
+
+            if (transform.position.y >= 0)
+            {
+                transform.position = new Vector3(transform.position.x, 0, 0);
+            }
+            else if (transform.position.y <= -4)
+            {
+                transform.position = new Vector3(transform.position.x, -4, 0);
+            }
+            if (transform.position.x > 11.3)
+            {
+                transform.position = new Vector3(-11.3f, transform.position.y, 0);
+            }
+            else if (transform.position.x < -11.3)
+            {
+                transform.position = new Vector3(11.3f, transform.position.y, 0);
+            }
+
+
+            if (Input.GetKey(KeyCode.LeftShift))
+            {
+                _uiManager.ThrustEnabled();
+                transform.Translate(direction * _speed * Time.deltaTime);
+            }
+            else
+            {
+                transform.Translate(direction * _speed * Time.deltaTime);
+            }
         }
     }
+
+    
 
     void FireLaser()
     {
@@ -302,4 +319,16 @@ public class Player : MonoBehaviour
         }
     }
 
+    public void Thrusters(bool status)
+    {
+        switch(status)
+        {
+            case true:
+                _speed = _thrustSpeed;
+                break;
+            case false:
+                _speed = _regularSpeed;
+                break;
+        }
+    }
 }

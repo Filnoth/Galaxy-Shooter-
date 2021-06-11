@@ -22,6 +22,9 @@ public class UIManager : MonoBehaviour
     private Player _player;
     [SerializeField]
     private Text _outOfAmmo;
+    [SerializeField]
+    private Slider _thrustBar;
+    private bool _isThrusting = false;
 
     private GameManager _gameManager;
 
@@ -34,6 +37,7 @@ public class UIManager : MonoBehaviour
         _gameManager = GameObject.Find("Game_Manager").GetComponent<GameManager>();
         _player = GameObject.Find("Player").GetComponent<Player>();
         _ammoCountText.text = "Ammo: " + 15;
+        _thrustBar.value = 10;
         
 
     }
@@ -99,5 +103,31 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    public void Update()
+    {
+        if(!_isThrusting)
+        {
+            _thrustBar.value += Time.deltaTime;
+        }
+        else
+        {
+            _thrustBar.value -= Time.deltaTime * 3;
+            if(_thrustBar.value <= 0)
+            {
+                _isThrusting = false;
+                _player.Thrusters(false);
+            }
+        }
+    }
+
+    public void ThrustEnabled()
+    {
+        
+        if (_thrustBar.value >= 3)
+        {
+            _isThrusting = true;
+            _player.Thrusters(true);
+        }
+    }
 
 }
