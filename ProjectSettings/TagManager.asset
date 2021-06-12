@@ -10,6 +10,8 @@ TagManager:
   - Asteroid
   - Undefined
   - Elaser
+  - Missile
+  - WideLaser
   layers:
   - Default
   - TransparentFX

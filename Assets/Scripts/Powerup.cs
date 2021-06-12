@@ -51,6 +51,9 @@ public class Powerup : MonoBehaviour
                     case 4:
                         player.LifeIncrease();
                         break;
+                    case 5:
+                        player.TsunamiShot();
+                        break;
                 }
                    
             }

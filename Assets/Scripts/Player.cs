@@ -49,7 +49,11 @@ public class Player : MonoBehaviour
     private int _shieldCharge;
     private float _thrustSpeed;
     private float _regularSpeed;
-
+    /*[SerializeField]
+    private GameObject _missilePrefab;*/
+    private bool _tsunamiShotActive = false;
+    [SerializeField]
+    private GameObject _tsunamiShotPrefab;
     void Start()
     {
         transform.position = new Vector3(0, 0, 0);
@@ -85,6 +89,7 @@ public class Player : MonoBehaviour
     void Update()
     {
         Movement();
+        //FireMissile();
 
         if (_ammoDepleted == false)
         {
@@ -124,7 +129,7 @@ public class Player : MonoBehaviour
                 _uiManager.ThrustEnabled();
                 transform.Translate(direction * _speed * Time.deltaTime);
             }
-            else
+            else 
             {
                 transform.Translate(direction * _speed * Time.deltaTime);
             }
@@ -138,18 +143,26 @@ public class Player : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space) && Time.time > _canFire)
         {
             _canFire = Time.time + _fireRate;
-            if (_tripleShotActive == true)
-            {
-                Instantiate(_tripleShotPrefab, transform.position, Quaternion.identity);
-            }
-            else 
+            
+            
+                if (_tripleShotActive == true)
+                {
+                    Instantiate(_tripleShotPrefab, transform.position, Quaternion.identity);
+                }
+                else if (_tsunamiShotActive == true)
+
+                {
+                    Instantiate(_tsunamiShotPrefab, transform.position + offset, Quaternion.identity);
+                }
+            else
             {
                 Instantiate(_laserPrefab, transform.position + offset, Quaternion.identity);
             }
 
-         
 
-            _audioSource.Play();
+
+
+                _audioSource.Play();
             ammo--;
             ReloadAmmo(ammo);
 
@@ -162,6 +175,14 @@ public class Player : MonoBehaviour
         }
 
     }
+
+    /*void FireMissile()
+    {
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            Instantiate(_missilePrefab, transform.position, Quaternion.identity);
+        }
+    }*/
 
     public void Damage()
     {
@@ -330,5 +351,17 @@ public class Player : MonoBehaviour
                 _speed = _regularSpeed;
                 break;
         }
+    }
+
+    public void TsunamiShot()
+    {
+        _tsunamiShotActive = true;
+        StartCoroutine(TsunamiShotRoutine());
+    }
+
+    IEnumerator TsunamiShotRoutine()
+    {
+        yield return new WaitForSeconds(5f);
+        _tsunamiShotActive = false;
     }
 }
