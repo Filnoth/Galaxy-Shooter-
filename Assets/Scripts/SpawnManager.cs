@@ -11,10 +11,13 @@ public class SpawnManager : MonoBehaviour
     [SerializeField]
     private GameObject[] _powerups;
     private bool _stopSpawning = false;
+    private int _spawnValue;
+
+
     // Start is called before the first frame update
-    
-    
-    
+
+
+
     public void StartSpawning()
     {
         StartCoroutine(SpawnEnemyRoutine());
@@ -44,9 +47,42 @@ public class SpawnManager : MonoBehaviour
         yield return new WaitForSeconds(3.0f);
         while(_stopSpawning == false)
         {
+            _spawnValue = Random.Range(0, 100);
+            Debug.Log(_spawnValue);
+            int _randomPowerUp = Random.Range(0, 6);
+            
+            switch (_spawnValue < 15 ? "Triple" :
+                _spawnValue < 30 ? "Speed" :
+                _spawnValue < 40 ? "Shields" :
+                _spawnValue < 80 ? "Ammo" :
+                _spawnValue < 90 ? "Health" :
+                _spawnValue < 100 ? "Tsunami" : "Null")
+            {
+                case "Triple":
+                    _randomPowerUp = 0;
+                    break;
+                case "Speed":
+                    _randomPowerUp = 1;
+                    break;
+                case "Shields":
+                    _randomPowerUp = 2;
+                    break;
+                case "Ammo":
+                    _randomPowerUp = 3;
+                    break;
+                case "Health":
+                    _randomPowerUp = 4;
+                    break;
+                case "Tsunami":
+                    _randomPowerUp = 5;
+                    break;
+                case "Null":
+                    _randomPowerUp = 6;
+                    break;
+            }
+
             Vector3 posToSpawn = new Vector3(Random.Range(-8f, 8f), 7, 0);
-            int randomPowerUp = Random.Range(0, 6);
-            GameObject newPowerup = Instantiate(_powerups[randomPowerUp], posToSpawn, Quaternion.identity);
+            GameObject newPowerup = Instantiate(_powerups[_randomPowerUp], posToSpawn, Quaternion.identity);
             yield return new WaitForSeconds(Random.Range(3, 8));
         }
     }
@@ -56,5 +92,7 @@ public class SpawnManager : MonoBehaviour
     {
         _stopSpawning = true;
     }
+
+  
 
 }
