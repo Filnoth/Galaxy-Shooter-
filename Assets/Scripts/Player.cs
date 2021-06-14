@@ -132,6 +132,7 @@ public class Player : MonoBehaviour
             else 
             {
                 transform.Translate(direction * _speed * Time.deltaTime);
+
             }
         }
     }
@@ -340,15 +341,17 @@ public class Player : MonoBehaviour
         }
     }
 
-    public void Thrusters(bool status)
+    public void Thrusters(bool ActiveThrusters)
     {
-        switch(status)
+        switch(ActiveThrusters)
         {
             case true:
                 _speed = _thrustSpeed;
+                //_thrustersActive = true;
                 break;
             case false:
                 _speed = _regularSpeed;
+               // _thrustersActive = false;
                 break;
         }
     }

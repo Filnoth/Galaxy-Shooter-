@@ -14,6 +14,11 @@ public class Enemy : MonoBehaviour
     private GameObject _enemyLaser;
     private float _fireRate = 3.0f;
     private float _canFire = -1;
+    [SerializeField]
+    private GameObject _shields;
+    private bool _isShieldsActive = false;
+    private int _shieldChance;
+    private int _shieldPower;
 
     // Start is called before the first frame update
     void Start()
@@ -28,8 +33,11 @@ public class Enemy : MonoBehaviour
         if (_anim == null)
         {
             Debug.LogError("The Animator is NULL.");
-        }    
-        //assign component to anim
+        }
+        _isShieldsActive = false;
+        _shields.SetActive(false);
+        ShieldCheck();
+
     }
 
     // Update is called once per frame
@@ -62,8 +70,8 @@ public class Enemy : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.tag == "Player")
-        {
+         if (other.tag == "Player")
+         {
             Player player = other.transform.GetComponent<Player>();
             if (player != null)
             {
@@ -73,35 +81,69 @@ public class Enemy : MonoBehaviour
             _speed = 0;
             _audioSource.Play();
             Destroy(this.gameObject, 2.1f);
-        }
+         }
 
-        if (other.tag == "Laser")
+        if (other.tag == "Laser" && _isShieldsActive == true)
         {
             Destroy(other.gameObject);
-            if (_player != null)
-            {
-                _player.AddScore(10);
-            }
-            _anim.SetTrigger("OnEnemyDeath");
-            _speed = 0;
+            _shieldPower--;
+            _shields.SetActive(false);
+            StartCoroutine(ShieldChangeDelay());
+            return;
+        }
+
+        if (other.tag == "Laser" && _isShieldsActive == false)
+        {
+            Destroy(other.gameObject);
             _audioSource.Play();
+            _anim.SetTrigger("OnEnemyDeath");
             Destroy(GetComponent<Collider2D>());
             Destroy(this.gameObject, 2.1f);
         }
 
         if (other.tag == "WideLaser")
         {
-            if (_player != null)
-            {
-                _player.AddScore(10);
-            }
+            _audioSource.Play();
+            _anim.SetTrigger("OnEnemyDeath");
+            Destroy(GetComponent<Collider2D>());
+            Destroy(this.gameObject, 2.1f);
+        }
+
+        if (_player != null)
+        {
+            _player.AddScore(10);
+
             _anim.SetTrigger("OnEnemyDeath");
             _speed = 0;
             _audioSource.Play();
             Destroy(GetComponent<Collider2D>());
             Destroy(this.gameObject, 2.1f);
         }
+        
 
+    }
+
+    private void ShieldIsActive()
+    {
+        _shieldPower = 1;
+        _isShieldsActive = true;
+        _shields.SetActive(true);
+    }
+
+    private void ShieldCheck()
+    {
+        _shieldChance = Random.Range(0, 4);
+        Debug.Log(_shieldChance);
+        if (_shieldChance == 0)
+        {
+            ShieldIsActive();
+        }
+    }
+
+    IEnumerator ShieldChangeDelay()
+    {
+        yield return new WaitForSeconds(0.5f);
+        _isShieldsActive = false;
     }
 }
     
