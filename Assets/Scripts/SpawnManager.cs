@@ -47,14 +47,15 @@ public class SpawnManager : MonoBehaviour
         while(_stopSpawning == false)
         {
             _spawnValue = Random.Range(0, 100);
-            int _randomPowerUp = Random.Range(0, 6);
+            int _randomPowerUp = Random.Range(0, 7);
             
-            switch (_spawnValue < 15 ? "Triple" :
-                _spawnValue < 30 ? "Speed" :
-                _spawnValue < 40 ? "Shields" :
-                _spawnValue < 80 ? "Ammo" :
-                _spawnValue < 90 ? "Health" :
-                _spawnValue < 100 ? "Tsunami" : "Null")
+            switch (_spawnValue < 10 ? "Triple" :
+                _spawnValue < 20 ? "Speed" :
+                _spawnValue < 35 ? "Shields" :
+                _spawnValue < 75 ? "Ammo" :
+                _spawnValue < 83 ? "Health" :
+                _spawnValue < 90 ? "Tsunami" : 
+                _spawnValue < 100 ? "Mag" : "Null")
             {
                 case "Triple":
                     _randomPowerUp = 0;
@@ -74,8 +75,11 @@ public class SpawnManager : MonoBehaviour
                 case "Tsunami":
                     _randomPowerUp = 5;
                     break;
-                case "Null":
+                case "Mag":
                     _randomPowerUp = 6;
+                    break;
+                case "Null":
+                    _randomPowerUp = 7;
                     break;
             }
 

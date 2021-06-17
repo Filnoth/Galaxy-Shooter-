@@ -11,9 +11,12 @@ public class Powerup : MonoBehaviour
     private int _PowerUp;
     [SerializeField]
     private AudioClip _clip;
+    private bool _collectionPressed = false;
+    private Player _player;
     // Start is called before the first frame update
     void Start()
     {
+        _player = GameObject.Find("Player").GetComponent<Player>();
     }
 
     // Update is called once per frame
@@ -23,6 +26,11 @@ public class Powerup : MonoBehaviour
         if (transform.position.y < -5.0f)
         {
             Destroy(this.gameObject);
+        }
+
+        if (_collectionPressed)
+        {
+            transform.position = Vector3.MoveTowards(transform.position, _player.transform.position, _speed * 2 * Time.deltaTime);
         }
     }
 
@@ -54,6 +62,9 @@ public class Powerup : MonoBehaviour
                     case 5:
                         player.TsunamiShot();
                         break;
+                    case 6:
+                        player.ShieldDrain();
+                        break;
                 }
                    
             }
@@ -62,4 +73,17 @@ public class Powerup : MonoBehaviour
             Destroy(this.gameObject);
         }
     }
+
+    public void StartCollect()
+    {
+        _collectionPressed = true;
+        StartCoroutine(StopCollect());
+    } 
+
+    IEnumerator StopCollect()
+    {
+        yield return new WaitForSeconds(3f);
+        _collectionPressed = false;
+    }
+
 } 

@@ -54,6 +54,8 @@ public class Player : MonoBehaviour
     private bool _tsunamiShotActive = false;
     [SerializeField]
     private GameObject _tsunamiShotPrefab;
+    private bool _shieldMagActive;
+    private GameObject[] _powerups;
     void Start()
     {
         transform.position = new Vector3(0, 0, 0);
@@ -95,6 +97,19 @@ public class Player : MonoBehaviour
         {
             FireLaser();
         }
+        _powerups = GameObject.FindGameObjectsWithTag("Powerup");
+        foreach (GameObject pwrup in _powerups)
+        {
+            if (pwrup == null)
+            {
+                return;
+            }
+            else if (Input.GetKeyDown(KeyCode.C))
+            {
+                pwrup.GetComponent<Powerup>().StartCollect();
+            }
+        }
+
     }
     void Movement()
     {
@@ -206,6 +221,7 @@ public class Player : MonoBehaviour
             return;
                 
         }
+
 
         else 
         {
@@ -367,4 +383,24 @@ public class Player : MonoBehaviour
         yield return new WaitForSeconds(5f);
         _tsunamiShotActive = false;
     }
+
+    public void ShieldDrain()
+    {
+        _shieldMagActive = true;
+        if (_shieldMagActive == true)
+        {
+            _shieldBoostActive = false;
+            _shieldCharge = 0;
+            _Shield.SetActive(false);
+            StartCoroutine(MagDrainRoutine());
+        }
+    }
+
+    IEnumerator MagDrainRoutine()
+    {
+        yield return new WaitForSeconds(1f);
+        _shieldMagActive = false;
+    }
+
+
 }
