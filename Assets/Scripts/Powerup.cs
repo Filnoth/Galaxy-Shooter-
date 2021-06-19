@@ -69,6 +69,10 @@ public class Powerup : MonoBehaviour
                    
             }
         }
+        if (other.tag != "Player")
+        {
+            return;
+        }
         {
             Destroy(this.gameObject);
         }

@@ -36,11 +36,10 @@ public class UIManager : MonoBehaviour
         _restartText.gameObject.SetActive(false);
         _gameManager = GameObject.Find("Game_Manager").GetComponent<GameManager>();
         _player = GameObject.Find("Player").GetComponent<Player>();
-        _ammoCountText.text = "Ammo: " + 15;
         _thrustBar.value = 10;
         
-
     }
+
 
     public void UpdateScore(int playerScore)
     {
@@ -87,11 +86,10 @@ public class UIManager : MonoBehaviour
         }
     }*/
 
-    public void UpdateAmmo(int ammoCount)
+    public void UpdateAmmo(int ammoCount, int maxAmmo)
     
     {
-        _ammoCountText.text = "Ammo: " + ammoCount.ToString();
-
+        _ammoCountText.text = "Ammo: " + ammoCount.ToString() + "/" + maxAmmo;
         if (_player.ammo == 0)
         {
             _ammoCountText.color = Color.red;

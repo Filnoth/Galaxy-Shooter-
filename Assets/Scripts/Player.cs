@@ -42,7 +42,7 @@ public class Player : MonoBehaviour
     private AudioClip _explosionSfx;
     private float _thrusterBoost = 3f;
     public int ammo;
-    private int _maxAmmo = 15;
+    public int _maxAmmo = 15;
     private bool _ammoDepleted = false;
     [SerializeField]
     private GameObject _camera;
@@ -63,6 +63,7 @@ public class Player : MonoBehaviour
         _uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();
         _audioSource = GetComponent<AudioSource>();
         ammo = _maxAmmo;
+        _uiManager.UpdateAmmo(ammo, _maxAmmo);
         _thrustSpeed = _speed * _thrusterBoost;
         _regularSpeed = _speed;
 
@@ -180,7 +181,7 @@ public class Player : MonoBehaviour
 
                 _audioSource.Play();
             ammo--;
-            ReloadAmmo(ammo);
+            _uiManager.UpdateAmmo(ammo, _maxAmmo);
 
 
               if (ammo <= 0)
@@ -297,18 +298,11 @@ public class Player : MonoBehaviour
         _uiManager.UpdateScore(_score);
     }
 
-    public void ReloadAmmo(int ammoCount)
-
-    {
-        ammo = ammoCount;
-        _uiManager.UpdateAmmo(ammo);
-        
-    }
-
     public void AmmoBoost()
 
     {
         ammo = _maxAmmo;
+        _uiManager.UpdateAmmo(ammo, _maxAmmo);
         _ammoDepleted = false;
     }
 

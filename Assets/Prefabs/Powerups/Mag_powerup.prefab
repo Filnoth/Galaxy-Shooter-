@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 3275409959862200612}
   - component: {fileID: 3275409959862200615}
   - component: {fileID: 1237403953517009205}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Mag_powerup
   m_TagString: Powerup
   m_Icon: {fileID: 0}

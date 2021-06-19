@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 4467706871617720682}
   - component: {fileID: 2486812484652704493}
   - component: {fileID: 777454010}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Repair_powerup
   m_TagString: Powerup
   m_Icon: {fileID: 0}

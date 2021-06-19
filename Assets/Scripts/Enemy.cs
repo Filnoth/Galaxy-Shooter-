@@ -5,6 +5,7 @@ using UnityEngine;
 public class Enemy : MonoBehaviour
 {
     private float _speed = 4.0f;
+    private float _verticalSpeed = 2f;
 
     private Player _player;
 
@@ -19,6 +20,8 @@ public class Enemy : MonoBehaviour
     private bool _isShieldsActive = false;
     private int _shieldChance;
     private int _shieldPower;
+    private int _moveType;
+    private bool _rightMovement = false;
 
     // Start is called before the first frame update
     void Start()
@@ -37,6 +40,9 @@ public class Enemy : MonoBehaviour
         _isShieldsActive = false;
         _shields.SetActive(false);
         ShieldCheck();
+        _moveType = Random.Range(0, 2);
+        Debug.Log(_moveType);
+        Physics.IgnoreLayerCollision(9, 9);
 
     }
 
@@ -44,33 +50,63 @@ public class Enemy : MonoBehaviour
     void Update()
     {
         EnemyMovement();
-        if (Time.time > _canFire)
-        {
-            _fireRate = Random.Range(4f, 6f);
-            _canFire = Time.time + _fireRate;
-            GameObject enemylaser = Instantiate(_enemyLaser, transform.position, Quaternion.identity);
-            Laser[] lasers = enemylaser.GetComponentsInChildren<Laser>();
-
-            for(int i = 0; i < lasers.Length; i++)
-            {
-                lasers[i].AssignEnemyLaser();
-            }
-        }
+        SmartFire();
     }
 
     void EnemyMovement()
     {
-        transform.Translate(Vector3.down * _speed * Time.deltaTime);
-        if (transform.position.y < -5f)
+         switch(_moveType)
+         {
+             case 0:
+                 StraightMovement();
+                 break;
+             case 1:
+                 ZigZagMovement();
+                 break;
+         }
+
+        if (transform.position.y < -7f)
         {
             float randomX = Random.Range(-8f, 8f);
             transform.position = new Vector3(randomX, 7, 0);
         }
+
     }
+
+    void StraightMovement()
+    {
+        transform.Translate(Vector3.down * _speed * Time.deltaTime);
+    }
+    
+    void ZigZagMovement()
+    {
+        if (_rightMovement == true)
+        {
+            transform.Translate(new Vector3(1, 0, 0) * _speed * Time.deltaTime);
+            transform.Translate(new Vector3(0, -1, 0) * _verticalSpeed * Time.deltaTime);
+        }
+
+        if (transform.position.x >= 6.5f)
+        {
+            _rightMovement = false;
+        }
+
+        if (_rightMovement == false)
+        {
+            transform.Translate(new Vector3(-1, 0, 0) * _speed * Time.deltaTime);
+            transform.Translate(new Vector3(0, -1, 0) * _verticalSpeed * Time.deltaTime);
+
+            if (transform.position.x <= -6.5f)
+            {
+                _rightMovement = true;
+            }
+        }
+    }
+
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-         if (other.tag == "Player")
+        if (other.tag == "Player")
          {
             Player player = other.transform.GetComponent<Player>();
             if (player != null)
@@ -119,7 +155,16 @@ public class Enemy : MonoBehaviour
             Destroy(GetComponent<Collider2D>());
             Destroy(this.gameObject, 2.1f);
         }
-        
+
+        if(other.tag == "Powerup")
+        {
+            return;
+        }
+
+        if (other.tag == "Enemy")
+        {
+            return;
+        }
 
     }
 
@@ -145,5 +190,38 @@ public class Enemy : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
         _isShieldsActive = false;
     }
+
+    private void EnemyFire()
+    {
+        if (Time.time > _canFire)
+        {
+            _fireRate = Random.Range(4f, 6f);
+            _canFire = Time.time + _fireRate;
+            GameObject enemylaser = Instantiate(_enemyLaser, transform.position, Quaternion.identity);
+            Laser[] lasers = enemylaser.GetComponentsInChildren<Laser>();
+
+            for (int i = 0; i < lasers.Length; i++)
+            {
+                lasers[i].AssignEnemyLaser();
+            }
+        }
+
+    }
+
+    private void SmartFire()
+    {
+        if (transform.position.y < _player.transform.position.y)
+        {
+            GameObject enemylaser = Instantiate(_enemyLaser, transform.position, Quaternion.identity);
+            Laser[] lasers = enemylaser.GetComponentsInChildren<Laser>();
+
+            for (int i = 0; i < lasers.Length; i++)
+            {
+                lasers[i].AssignEnemyLaser();
+            }
+        }
+    }
+
+
 }
     
