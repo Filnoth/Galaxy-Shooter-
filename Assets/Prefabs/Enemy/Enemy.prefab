@@ -166,6 +166,8 @@ MonoBehaviour:
   _enemyLaser: {fileID: 4083278772423440327, guid: bb48434a47d0b9c428c8c81eeffa1052,
     type: 3}
   _shields: {fileID: 3659859987527684214}
+  _backLaser: {fileID: 1890190519823282135, guid: 6cb4a857fadef6c438250ca48b5fdb8b,
+    type: 3}
 --- !u!212 &1594243431781394504
 SpriteRenderer:
   m_ObjectHideFlags: 0

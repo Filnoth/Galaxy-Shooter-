@@ -2,26 +2,25 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Laser : MonoBehaviour
+public class EnemyLaser : MonoBehaviour
 {
     [SerializeField]
     private float _speed = 8.0f;
-    private bool _isEnemyLaser = false;
+    private bool _isBackShot = false;
 
     // Update is called once per frame
 
     void Update()
     {
-       if (_isEnemyLaser == false)
+        if (_isBackShot == true)
         {
             MoveUp();
         }
 
-       else
+        else
         {
             MoveDown();
         }
-        
     }
 
     public void MoveUp()
@@ -38,7 +37,7 @@ public class Laser : MonoBehaviour
         }
     }
 
-    void MoveDown()
+    public void MoveDown()
     {
         transform.Translate(Vector3.down * _speed * Time.deltaTime);
         if (transform.position.y < -8f)
@@ -52,15 +51,16 @@ public class Laser : MonoBehaviour
         }
     }
 
-    public void AssignEnemyLaser()
+    public void BackShot()
     {
-        _isEnemyLaser = true;
+        _isBackShot = true;
     }
 
+   
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.tag == "Player" && _isEnemyLaser == true)
+        if (other.tag == "Player")
         {
             Player player = other.GetComponent<Player>();
 
@@ -69,18 +69,7 @@ public class Laser : MonoBehaviour
                 player.Damage();
             }
             Destroy(this.gameObject);
-        } 
-        
+        }
+
     }
 }
-    
-
-
-
-
-
-
-
-
-
-

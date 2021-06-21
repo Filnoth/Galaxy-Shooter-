@@ -1655,6 +1655,7 @@ MonoBehaviour:
   _lasersfx: {fileID: 8300000, guid: 75676f361bdfeaf41a46623e95df3dbc, type: 3}
   _explosionSfx: {fileID: 8300000, guid: a885c043fab7e46438bba03ba9dab6bc, type: 3}
   ammo: 0
+  _maxAmmo: 15
   _camera: {fileID: 1639505879}
   _tsunamiShotPrefab: {fileID: 7726706732595631418, guid: 7a4bf919c7a22ff45b3d9cfa118e10a2,
     type: 3}
@@ -2847,6 +2848,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Asteroid
+      objectReference: {fileID: 0}
+    - target: {fileID: 7272006514620454296, guid: 615574c1645cd45489d40053b1ef2e3e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7272006514620454296, guid: 615574c1645cd45489d40053b1ef2e3e,
         type: 3}
