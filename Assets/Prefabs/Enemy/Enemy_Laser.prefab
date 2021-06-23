@@ -1,5 +1,31 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &6661717324109690985
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1371154999659763363}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24459758547a38145b2e0db1acf9f73e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _speed: 8
+--- !u!114 &8617634346650186609
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3315897004526854139}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24459758547a38145b2e0db1acf9f73e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _speed: 8
 --- !u!1 &4083278772423440327
 GameObject:
   m_ObjectHideFlags: 0
@@ -48,6 +74,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Layer
       value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 2116614956423086191, guid: 664d19ea247571e42a235e2b365826fe,
+        type: 3}
+      propertyPath: m_TagString
+      value: Elaser
       objectReference: {fileID: 0}
     - target: {fileID: 2116614956423086196, guid: 664d19ea247571e42a235e2b365826fe,
         type: 3}
@@ -104,8 +135,15 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2116614956423086184, guid: 664d19ea247571e42a235e2b365826fe, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 664d19ea247571e42a235e2b365826fe, type: 3}
+--- !u!1 &1371154999659763363 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2116614956423086191, guid: 664d19ea247571e42a235e2b365826fe,
+    type: 3}
+  m_PrefabInstance: {fileID: 1033831354545477324}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1371154999659763384 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2116614956423086196, guid: 664d19ea247571e42a235e2b365826fe,
@@ -128,6 +166,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Layer
       value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 2116614956423086191, guid: 664d19ea247571e42a235e2b365826fe,
+        type: 3}
+      propertyPath: m_TagString
+      value: Elaser
       objectReference: {fileID: 0}
     - target: {fileID: 2116614956423086196, guid: 664d19ea247571e42a235e2b365826fe,
         type: 3}
@@ -184,8 +227,15 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2116614956423086184, guid: 664d19ea247571e42a235e2b365826fe, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 664d19ea247571e42a235e2b365826fe, type: 3}
+--- !u!1 &3315897004526854139 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2116614956423086191, guid: 664d19ea247571e42a235e2b365826fe,
+    type: 3}
+  m_PrefabInstance: {fileID: 3700785540601896852}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &3315897004526854112 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2116614956423086196, guid: 664d19ea247571e42a235e2b365826fe,

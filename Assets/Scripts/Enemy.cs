@@ -27,6 +27,10 @@ public class Enemy : MonoBehaviour
     private int _ramSpeed = 6;
     [SerializeField]
     private GameObject _backLaser;
+    [SerializeField]
+    private GameObject _smallEnemy;
+    private bool _laserDetected = false;
+    private int _ranNum;
     Vector3 offset = new Vector3(0, 3f, 0);
 
 
@@ -49,30 +53,34 @@ public class Enemy : MonoBehaviour
         _shields.SetActive(false);
         ShieldCheck();
         _moveType = Random.Range(0, 2);
-        _enemyType = 2;
+        _enemyType = Random.Range(0, 100);
         Debug.Log(_enemyType);
         Physics.IgnoreLayerCollision(9, 9);
+        _ranNum = Random.Range(0, 2) * 2 - 1;
 
     }
 
     // Update is called once per frame
     void Update()
     {
-        EnemyMovement();
+        //EnemyMovement();
         EnemyType();
+        EnemyMovement();
+        
+
     }
 
     void EnemyMovement()
     {
-         switch(_moveType)
-         {
-             case 0:
-                 StraightMovement();
-                 break;
-             case 1:
-                 ZigZagMovement();
-                 break;
-         }
+        switch (_moveType)
+        {
+            case 0:
+                StraightMovement();
+                break;
+            case 1:
+                ZigZagMovement();
+                break;
+        }
 
         if (transform.position.y < -7f)
         {
@@ -86,7 +94,7 @@ public class Enemy : MonoBehaviour
     {
         transform.Translate(Vector3.down * _speed * Time.deltaTime);
     }
-    
+
     void ZigZagMovement()
     {
         if (_rightMovement == true)
@@ -95,7 +103,7 @@ public class Enemy : MonoBehaviour
             transform.Translate(new Vector3(0, -1, 0) * _verticalSpeed * Time.deltaTime);
         }
 
-        if (transform.position.x >= 6.5f)
+        if (transform.position.x >= 9.5f)
         {
             _rightMovement = false;
         }
@@ -105,7 +113,7 @@ public class Enemy : MonoBehaviour
             transform.Translate(new Vector3(-1, 0, 0) * _speed * Time.deltaTime);
             transform.Translate(new Vector3(0, -1, 0) * _verticalSpeed * Time.deltaTime);
 
-            if (transform.position.x <= -6.5f)
+            if (transform.position.x <= -9)
             {
                 _rightMovement = true;
             }
@@ -116,7 +124,7 @@ public class Enemy : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.tag == "Player" && _isShieldsActive == false)
-         {
+        {
             Player player = other.transform.GetComponent<Player>();
             if (player != null)
             {
@@ -127,7 +135,7 @@ public class Enemy : MonoBehaviour
             _ramSpeed = 0;
             _audioSource.Play();
             Destroy(this.gameObject, 2.1f);
-         }
+        }
 
         if (other.tag == "Player" && _isShieldsActive == true)
         {
@@ -144,7 +152,7 @@ public class Enemy : MonoBehaviour
 
         if (other.tag == "Laser" && _isShieldsActive == true)
         {
-            Destroy(other.gameObject);
+                Destroy(other.gameObject);
             _shieldPower--;
             _shields.SetActive(false);
             StartCoroutine(ShieldChangeDelay());
@@ -153,6 +161,10 @@ public class Enemy : MonoBehaviour
 
         if (other.tag == "Laser" && _isShieldsActive == false)
         {
+            if (_player != null)
+            {
+                _player.AddScore(10);
+            }
             Destroy(other.gameObject);
             _speed = 0;
             _ramSpeed = 0;
@@ -164,34 +176,16 @@ public class Enemy : MonoBehaviour
 
         if (other.tag == "WideLaser")
         {
+            if (_player != null)
+            {
+                _player.AddScore(10);
+            }
             _speed = 0;
             _ramSpeed = 0;
             _audioSource.Play();
             _anim.SetTrigger("OnEnemyDeath");
             Destroy(GetComponent<Collider2D>());
             Destroy(this.gameObject, 2.1f);
-        }
-
-        if (_player != null)
-        {
-            _player.AddScore(10);
-
-            _anim.SetTrigger("OnEnemyDeath");
-            _speed = 0;
-            _ramSpeed = 0;
-            _audioSource.Play();
-            Destroy(GetComponent<Collider2D>());
-            Destroy(this.gameObject, 2.1f);
-        }
-
-        if(other.tag == "Powerup")
-        {
-            return;
-        }
-
-        if (other.tag == "Enemy")
-        {
-            return;
         }
 
     }
@@ -221,16 +215,26 @@ public class Enemy : MonoBehaviour
 
     void EnemyType()
     {
-        switch(_enemyType)
+        switch (_enemyType < 30 ? "Base" :
+            _enemyType < 55 ? "Rammer" : 
+            _enemyType < 80 ? "Backshot" :
+            _enemyType < 100 ? "Avoider" : "Null")
         {
-            case 0:
+            case "Base":
                 BaseEnemy();
                 break;
-            case 1:
+            case "Rammer":
                 RamEnemy();
+                this.gameObject.GetComponent<SpriteRenderer>().material.color = Color.green;
                 break;
-            case 2:
+            case "Bachshot":
                 BackwardsEnemy();
+                this.gameObject.GetComponent<SpriteRenderer>().material.color = Color.yellow;
+                break;
+            case "Avoider":
+                DodgeEnemy();
+                this.gameObject.GetComponent<SpriteRenderer>().material.color = Color.red;
+
                 break;
         }
     }
@@ -242,10 +246,11 @@ public class Enemy : MonoBehaviour
             _fireRate = Random.Range(4f, 6f);
             _canFire = Time.time + _fireRate;
             GameObject enemylaser = Instantiate(_enemyLaser, transform.position, Quaternion.identity);
-            Laser[] lasers = enemylaser.GetComponentsInChildren<Laser>();
-           for (int i = 0; i < lasers.Length; i++)
+            EnemyLaser[] lasers = enemylaser.GetComponentsInChildren<EnemyLaser>();
+
+            for (int i = 0; i < lasers.Length; i++)
             {
-                lasers[i].AssignEnemyLaser();
+                lasers[i].RegShot();
             }
         }
     }
@@ -257,11 +262,11 @@ public class Enemy : MonoBehaviour
             _fireRate = Random.Range(4f, 6f);
             _canFire = Time.time + _fireRate;
             GameObject enemylaser = Instantiate(_enemyLaser, transform.position, Quaternion.identity);
-            Laser[] lasers = enemylaser.GetComponentsInChildren<Laser>();
+            EnemyLaser[] lasers = enemylaser.GetComponentsInChildren<EnemyLaser>();
 
             for (int i = 0; i < lasers.Length; i++)
             {
-                lasers[i].AssignEnemyLaser();
+                lasers[i].RegShot();
             }
         }
         if (Vector3.Distance(_player.transform.position, transform.position) < _detectionRange)
@@ -278,13 +283,14 @@ public class Enemy : MonoBehaviour
             _canFire = Time.time + _fireRate;
             GameObject enemylaser = Instantiate(_backLaser, transform.position + offset, Quaternion.identity);
             EnemyLaser[] lasers = enemylaser.GetComponentsInChildren<EnemyLaser>();
-            
+
 
             for (int i = 0; i < lasers.Length; i++)
             {
                 lasers[i].BackShot();
             }
-            
+
+
         }
 
         else if (Time.time > _canFire)
@@ -292,14 +298,50 @@ public class Enemy : MonoBehaviour
             _fireRate = Random.Range(4f, 6f);
             _canFire = Time.time + _fireRate;
             GameObject enemylaser = Instantiate(_enemyLaser, transform.position, Quaternion.identity);
-            Laser[] lasers = enemylaser.GetComponentsInChildren<Laser>();
+            EnemyLaser[] lasers = enemylaser.GetComponentsInChildren<EnemyLaser>();
 
             for (int i = 0; i < lasers.Length; i++)
             {
-                lasers[i].AssignEnemyLaser();
+                lasers[i].RegShot();
             }
         }
 
     }
+
+    void DodgeEnemy()
+    {
+        if (Time.time > _canFire)
+        {
+            _fireRate = Random.Range(4f, 6f);
+            _canFire = Time.time + _fireRate;
+            GameObject enemylaser = Instantiate(_enemyLaser, transform.position, Quaternion.identity);
+            EnemyLaser[] lasers = enemylaser.GetComponentsInChildren<EnemyLaser>();
+
+            for (int i = 0; i < lasers.Length; i++)
+            {
+                lasers[i].RegShot();
+            }
+        }
+        if (_laserDetected)
+        {
+            transform.Translate(new Vector3(_ranNum * 5, -1, 0) * _speed * Time.deltaTime);
+        }
+
+    }
+
+    public void LaserFound(bool status)
+    {
+        _laserDetected = status;
+    }
+
+    public void FireLaser()
+    {
+        GameObject enemylaser = Instantiate(_enemyLaser, transform.position, Quaternion.identity);
+        EnemyLaser[] lasers = enemylaser.GetComponentsInChildren<EnemyLaser>();
+        for (int i = 0; i < lasers.Length; i++)
+        {
+            lasers[i].RegShot();
+        }
+    }
+
 }
-    

@@ -6,35 +6,43 @@ public class EnemyLaser : MonoBehaviour
 {
     [SerializeField]
     private float _speed = 8.0f;
-    private bool _isBackShot = false;
+    private int _shotType;
+    private Player _player;
 
     // Update is called once per frame
-
+    private void Start()
+    {
+        _player = GameObject.Find("Player").GetComponent<Player>();
+    }
     void Update()
     {
-        if (_isBackShot == true)
+        switch(_shotType)
         {
-            MoveUp();
+            case 0:
+                MoveDown();
+                break;
+            case 1:
+                MoveUp();
+                break;
         }
 
-        else
-        {
-            MoveDown();
-        }
     }
 
     public void MoveUp()
     {
-        transform.Translate(Vector3.up * _speed * Time.deltaTime);
-        if (transform.position.y > 8f)
-        {
-            if (transform.parent != null)
+        
+            transform.Translate(Vector3.up * _speed * Time.deltaTime);
+            if (transform.position.y > 8f)
             {
-                Destroy(transform.parent.gameObject);
-            }
+                if (transform.parent != null)
+                {
+                    Destroy(transform.parent.gameObject);
+                }
 
-            Destroy(this.gameObject);
-        }
+                Destroy(this.gameObject);
+            }
+          
+        
     }
 
     public void MoveDown()
@@ -51,9 +59,14 @@ public class EnemyLaser : MonoBehaviour
         }
     }
 
+    public void RegShot()
+    {
+        _shotType = 0;
+    }
+    
     public void BackShot()
     {
-        _isBackShot = true;
+        _shotType = 1;
     }
 
    
@@ -71,5 +84,12 @@ public class EnemyLaser : MonoBehaviour
             Destroy(this.gameObject);
         }
 
+        if (other.tag == "Powerup")
+        {
+            other.GetComponent<Powerup>().HitByEnemy();
+            Destroy(gameObject);
+        }
+
     }
+    
 }

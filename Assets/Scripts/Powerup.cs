@@ -77,7 +77,7 @@ public class Powerup : MonoBehaviour
             Destroy(this.gameObject);
         }
     }
-
+     
     public void StartCollect()
     {
         _collectionPressed = true;
@@ -88,6 +88,12 @@ public class Powerup : MonoBehaviour
     {
         yield return new WaitForSeconds(3f);
         _collectionPressed = false;
+    }
+
+    public void HitByEnemy()
+    {
+        _speed = 0f;
+        Destroy(gameObject);
     }
 
 } 
