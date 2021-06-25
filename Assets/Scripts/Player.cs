@@ -176,10 +176,7 @@ public class Player : MonoBehaviour
                 Instantiate(_laserPrefab, transform.position + offset, Quaternion.identity);
             }
 
-
-
-
-                _audioSource.Play();
+            _audioSource.Play();
             ammo--;
             _uiManager.UpdateAmmo(ammo, _maxAmmo);
 

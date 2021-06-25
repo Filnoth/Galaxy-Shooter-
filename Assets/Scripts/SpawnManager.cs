@@ -28,7 +28,7 @@ public class SpawnManager : MonoBehaviour
         
     }
 
-    IEnumerator SpawnEnemyRoutine()
+    public IEnumerator SpawnEnemyRoutine()
     {
         
         yield return new WaitForSeconds(3.0f);
@@ -37,6 +37,7 @@ public class SpawnManager : MonoBehaviour
             Vector3 posToSpawn = new Vector3(Random.Range(-8f, 8f), 7, 0);
             GameObject newEnemy = Instantiate(_enemyPrefab, posToSpawn, Quaternion.identity);
             newEnemy.transform.parent = _enemyContainer.transform;
+            newEnemy.GetComponent<Enemy>().SetNormalEnemy();
             yield return new WaitForSeconds(5.0f);
         }
     }

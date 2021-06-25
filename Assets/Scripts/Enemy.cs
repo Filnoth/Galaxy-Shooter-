@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    private float _speed = 0f;
+    private float _speed = 4f;
     private float _verticalSpeed = 2f;
 
     private Player _player;
@@ -22,15 +22,20 @@ public class Enemy : MonoBehaviour
     private int _shieldPower;
     private int _moveType;
     private bool _rightMovement = false;
+    [SerializeField]
     private int _enemyType;
+    private int _assignedType;
     private float _detectionRange = 6f;
     private int _ramSpeed = 6;
     [SerializeField]
     private GameObject _backLaser;
     [SerializeField]
     private GameObject _smallEnemy;
+    private SpawnManager _spawnManager;
     private bool _laserDetected = false;
     private int _ranNum;
+    private float _spawnerRate;
+    private bool _typeset;
     Vector3 offset = new Vector3(0, 3f, 0);
 
 
@@ -53,20 +58,20 @@ public class Enemy : MonoBehaviour
         _shields.SetActive(false);
         ShieldCheck();
         _moveType = Random.Range(0, 2);
-        _enemyType = Random.Range(0, 100);
-        Debug.Log(_enemyType);
         Physics.IgnoreLayerCollision(9, 9);
         _ranNum = Random.Range(0, 2) * 2 - 1;
-
     }
 
     // Update is called once per frame
     void Update()
     {
-        //EnemyMovement();
-        EnemyType();
+        if (!_typeset)
+        {
+            EnemyType();
+        }
+
         EnemyMovement();
-        
+        EnemyBehavior();
 
     }
 
@@ -152,7 +157,7 @@ public class Enemy : MonoBehaviour
 
         if (other.tag == "Laser" && _isShieldsActive == true)
         {
-                Destroy(other.gameObject);
+            Destroy(other.gameObject);
             _shieldPower--;
             _shields.SetActive(false);
             StartCoroutine(ShieldChangeDelay());
@@ -200,7 +205,6 @@ public class Enemy : MonoBehaviour
     private void ShieldCheck()
     {
         _shieldChance = Random.Range(0, 4);
-        Debug.Log(_shieldChance);
         if (_shieldChance == 0)
         {
             ShieldIsActive();
@@ -215,29 +219,62 @@ public class Enemy : MonoBehaviour
 
     void EnemyType()
     {
-        switch (_enemyType < 30 ? "Base" :
-            _enemyType < 55 ? "Rammer" : 
-            _enemyType < 80 ? "Backshot" :
-            _enemyType < 100 ? "Avoider" : "Null")
+        switch (_enemyType < 10 ? "Base" :
+            _enemyType < 35 ? "Rammer" :
+            _enemyType < 40 ? "Backshot" :
+            _enemyType < 60 ? "Avoider" :
+            _enemyType < 100 ? "Spawner" : "Null")
         {
             case "Base":
-                BaseEnemy();
+                _assignedType = 0;
                 break;
             case "Rammer":
-                RamEnemy();
+                _assignedType = 1;
                 this.gameObject.GetComponent<SpriteRenderer>().material.color = Color.green;
                 break;
-            case "Bachshot":
-                BackwardsEnemy();
+            case "Backshot":
+                _assignedType = 2;
                 this.gameObject.GetComponent<SpriteRenderer>().material.color = Color.yellow;
                 break;
             case "Avoider":
-                DodgeEnemy();
+                _assignedType = 3;
                 this.gameObject.GetComponent<SpriteRenderer>().material.color = Color.red;
+                break;
+            case "Spawner":
+                _assignedType = 4;
+                this.gameObject.GetComponent<SpriteRenderer>().material.color = Color.magenta;
 
                 break;
         }
+        _typeset = true;
     }
+
+    void EnemyBehavior()
+    {
+        switch (_assignedType)
+        {
+            case 0:
+                BaseEnemy();
+                break;
+            case 1:
+                RamEnemy();
+                break;
+            case 2:
+                BackwardsEnemy();
+                break;
+            case 3:
+                DodgeEnemy();
+                break;
+            case 4:
+                Spawner();
+                break;
+
+            default:
+                SetNormalEnemy();
+                break;
+        }
+    }
+
 
     void BaseEnemy()
     {
@@ -254,6 +291,8 @@ public class Enemy : MonoBehaviour
             }
         }
     }
+
+    
 
     void RamEnemy()
     {
@@ -343,5 +382,30 @@ public class Enemy : MonoBehaviour
             lasers[i].RegShot();
         }
     }
+
+    void Spawner()
+    {
+        if (Time.time > _spawnerRate)
+        {
+            _spawnerRate = Time.time + 3.5f;
+            Vector3 spawnSpot = new Vector3(Random.Range(-8f, 8f), 7, 0);
+            GameObject go = Instantiate(_smallEnemy, spawnSpot, Quaternion.identity);
+            go.GetComponent<Enemy>().SetSmallEnemy();
+        }
+    }
+
+    public void SetSmallEnemy()
+    {
+        _typeset = false ;
+        _enemyType = Random.Range(0, 60);
+        Debug.Log(_enemyType);
+    }
+
+    public void SetNormalEnemy()
+    {
+        _typeset = false;
+        _enemyType = Random.Range(0, 100);
+    }
+    
 
 }

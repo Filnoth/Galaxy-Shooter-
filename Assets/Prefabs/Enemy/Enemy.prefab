@@ -362,6 +362,7 @@ MonoBehaviour:
     type: 3}
   _smallEnemy: {fileID: 8168247576012339912, guid: 7ccbe39c448e4414a8b7042307880ea4,
     type: 3}
+  _enemyContainer: {fileID: 0}
 --- !u!212 &1594243431781394504
 SpriteRenderer:
   m_ObjectHideFlags: 0
